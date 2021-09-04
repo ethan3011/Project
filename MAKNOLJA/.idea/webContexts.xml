@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebContextManager">
+    <option name="state">
+      <map>
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/common/header.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/common" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/hotel/detail.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/hotel" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/hotel/main.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/hotel" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/hotel/reservation.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/hotel" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/info/corona.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/info" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/info/coronaList.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/info" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/info/healthFlight.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/info" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/main.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/news/main.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/views/news" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/payment.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/profile2.jsp" value="file://$PROJECT_DIR$/src/main/webapp" />
+      </map>
+    </option>
+  </component>
+</project>

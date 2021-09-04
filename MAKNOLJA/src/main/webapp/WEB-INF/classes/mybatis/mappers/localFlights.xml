@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maknolja.dao.LocalFlightDao">
+
+	<!-- 모든 국내 비행 내역을 반환한다. -->
+	<select id="getAllFlights" resultType="com.maknolja.vo.LocalFlight">
+		select
+			FLY_ENG_NAME					as	engName,
+			FLY_KOR_NAME					as	korName,
+			FLY_START_CITY_NAME				as	startCityName,
+			FLY_START_DATE					as	startDate,
+			FLY_START_TIEM					as	startTiem,
+			FLY_START_AIRPORT_CODE			as	startAirPortCode,
+			FLY_ARRIVE_CITY_NAME			as	arriveCityName,
+			FLY_END_DATE					as	endDate,
+			FLY_ARRIVE_TIME					as	arriveTime,
+			FLY_ARRIVE_AIRPORT_CODE			as	arriveAirportCode,
+			FLY_AIRPLANE_NO					as	airplanceNo,
+			FLY_FLIGHT_TYPE					as	flightType,
+			FLY_MONDAY						as	mon,
+			FLY_TUESDAY						as	tue,
+			FLY_WEDNESDAY					as	wed,
+			FLY_THURSDAY					as	thu,
+			FLY_FRIDAY						as	fri,
+			FLY_SATURDAY					as	sat,
+			FLY_SUNDAY						as	sun,
+			FLY_AVAILABLE_SEAT				as	availableSeat,
+			FLY_RESERVE_SEAT				as	reserveSeat,
+			FLY_CANCELD_SEAT				as	canceldSeat,
+			FLY_CREATED_DATE				as	createdDate,
+			FLY_UPDATED_DATE				as	updatedDate,
+			FLY_DELETED_DATE				as	deletedDate,
+			FLY_STATUS						as	flyStatus
+		from
+			MNJ_LOCAL_FLIGHT_INFO
+	</select>
+	
+	<select id="getFlightsStartCityNames" resultType="com.maknolja.vo.LocalFlight">
+		SELECT
+			FLY_START_CITY_NAME as startCityName, FLY_START_AIRPORT_CODE as startAirPortCode
+		FROM
+			MNJ_LOCAL_FLIGHT_INFO
+			
+		UNION
+		
+		SELECT
+			INTER_FLY_START_CITY_NAME, INTER_FLY_START_AIRPORT_CODE
+		FROM
+			MNJ_INTER_FLIGHT_INFO
+		ORDER BY
+			startCityName ASC
+	</select>
+	
+	<select id="getFlightsArriveCityNames" resultType="com.maknolja.vo.LocalFlight">
+		SELECT
+			FLY_ARRIVE_CITY_NAME as arriveCityName, FLY_ARRIVE_AIRPORT_CODE as arriveAirportCode
+		FROM
+			MNJ_LOCAL_FLIGHT_INFO
+			
+		UNION
+		
+		SELECT
+			INTER_FLY_ARRIVE_CITY_NAME, INTER_FLY_ARRIVE_AIRPORT_CODE
+		FROM
+			MNJ_INTER_FLIGHT_INFO
+		ORDER BY
+			arriveCityName ASC
+	</select>
+
+
+	<select id="getSearchticketlist" resultType="com.maknolja.vo.LocalFlight">
+		select
+			FLY_ENG_NAME                    as    engName,
+			FLY_KOR_NAME                    as    korName,
+			FLY_START_CITY_NAME                as    startCityName,
+			FLY_START_DATE                    as    startDate,
+			FLY_START_TIME                    as    startTiem,
+			FLY_START_AIRPORT_CODE            as    startAirPortCode,
+			FLY_ARRIVE_CITY_NAME            as    arriveCityName,
+			FLY_END_DATE                    as    endDate,
+			FLY_ARRIVE_TIME                    as    arriveTime,
+			FLY_ARRIVE_AIRPORT_CODE            as    arriveAirportCode,
+			FLY_AIRPLANE_NO                    as    airplanceNo,
+			FLY_FLIGHT_TYPE                    as    flightType,
+			FLY_MONDAY                        as    mon,
+			FLY_TUESDAY                        as    tue,
+			FLY_WEDNESDAY                    as    wed,
+			FLY_THURSDAY                    as    thu,
+			FLY_FRIDAY                        as    fri,
+			FLY_SATURDAY                    as    sat,
+			FLY_SUNDAY                        as    sun,
+			FLY_AVAILABLE_SEAT                as    availableSeat,
+			FLY_RESERVE_SEAT                as    reserveSeat,
+			FLY_CANCELD_SEAT                as    canceldSeat,
+			FLY_CREATED_DATE                as    createdDate,
+			FLY_UPDATED_DATE                as    updatedDate,
+			FLY_DELETED_DATE                as    deletedDate,
+			FLY_STATUS                        as    flyStatus
+		from
+			mnj_local_flight_info
+		where
+			FLY_START_AIRPORT_CODE = #{startAirPortCode}
+		  AND
+			FLY_ARRIVE_AIRPORT_CODE = #{arriveAirportCode}
+		  AND
+				TO_DATE(FLY_START_DATE,'MM/DD/YYYY') &lt; TO_DATE(#{startDate},'MM/DD/YYYY')
+		  AND
+				TO_DATE(FLY_END_DATE,'MM/DD/YYYY') &gt; TO_DATE(#{endDate},'MM/DD/YYYY')
+	</select>
+
+	<insert id="startDayCreadit" parameterType="com.maknolja.vo.LocalFlightCreditInfo">
+		insert into MNJ_FLIGHT_CREDIT_INFO
+		(
+		FLIGHT_STDAY_TIME,                             <!--출발시간(가는날)-->
+		FLIGHT_STDAY_AIRPORT_KOR,                      <!--출발공항 한국이름(가는날)-->
+		FLIGHT_STDAY_AIRPLANE_CODE,           			<!--비행편명 코드(가는날)-->
+		FLIGHT_STDAY_AIRPORT_ENG,                      <!--출발공항 영어이름(가는날)-->
+		FLIGHT_STDAY_AIRPORT_CODE,                     <!--출발공항 코드(가는날)-->
+		FLIGHT_STDAY_END_AIRPORT_CODE,                 <!--도착공항 코드(가는날)-->
+		FLIGHT_STDAY_END_TIME                         <!--도착시간(가는날)-->
+		)
+
+		values
+		(#{stdayTime},#{stdayAirportKor},#{stdayAirplaneCode},#{stdayAirportEng},#{stdayAirportCode},
+		#{stdayEndAirportCode},#{stdayEndTime})
+	</insert>
+
+	<update  id="comebackCreadit" parameterType="com.maknolja.vo.LocalFlightCreditInfo">
+		update
+		MNJ_FLIGHT_CREDIT_INFO
+		set
+		FLIGHT_RTDAY_TIME = #{stdayTime},                             <!--출발시간(가는날)-->
+		FLIGHT_RTDAY_AIRPORT_KOR = #{stdayAirportKor},                      <!--출발공항 한국이름(가는날)-->
+		FLIGHT_RTDAY_AIRPLANE_CODE = #{stdayAirplaneCode},           			<!--비행편명 코드(가는날)-->
+		FLIGHT_RTDAY_AIRPORT_ENG =#{stdayAirportEng},                      <!--출발공항 영어이름(가는날)-->
+		FLIGHT_RTDAY_AIRPORT_CODE =#{stdayAirportCode},                     <!--출발공항 코드(가는날)-->
+		FLIGHT_RTDAY_END_AIRPORT_CODE =#{stdayEndAirportCode},                 <!--도착공항 코드(가는날)-->
+		FLIGHT_RTDAY_END_TIME = #{stdayEndTime}                       <!--도착시간(가는날)-->
+		where
+		FLIGHT_STDAY_TIME = #{stdayTime}
+	</update>
+
+</mapper>

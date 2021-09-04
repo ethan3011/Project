@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maknolja.dao.LocalHotelDao">
+	
+	<select id="getAllLocalHotelsList" resultType="com.maknolja.vo.LocalHotel">
+		SELECT
+			ADDR_1				AS	addr1,
+			ADDR_2				AS	addr2,
+			AREA_CODE			AS	areaCode,
+            CAT1				AS	cat1,
+            CAT2				AS	cat2,
+            CAT3				AS	cat3,
+            CONTENT_ID			AS	id,
+            CREATED_DATE		AS	createdDate,
+            MAPX				AS	mapX,
+            MAPY				AS	maxY,
+            HOTEL_STAR			AS	hotelStar,
+            MODIFIED_DATE		AS	modifiedDate,
+            READ_COUNT			AS	readCount,
+            SIGUNGU_CODE		AS	sigunguCode,
+            TEL					AS	tel,
+            TITLE				AS	name,
+            ZIP_CODE			AS	zipCode,
+            FIRST_IMAGE			AS	firstImage,
+            SECOND_IMAGE		AS	secondImage,
+			STATUS				AS	status,
+			HOTEL_FRONT_DESK	AS	hasFrontDesk,
+			HOTEL_RESTAURANT	AS	hasrestaurant,
+			HOTEL_WIFI			AS	hasHotelWifi,
+			HOTEL_SMOKE_BAN		AS	hasSmokeBanArea,
+			HOTEL_COFFEE		AS	hasCoffeeShop
+		FROM
+			MNJ_HOTEL_LIST
+	</select>
+
+	<select id="getCityNames" resultType="com.maknolja.vo.LocalHotel">
+		SELECT
+			AREA_CODE			        AS	areaCode
+		FROM
+			MNJ_HOTEL_LIST
+		GROUP BY
+			AREA_CODE
+		ORDER BY
+			AREA_CODE ASC
+	</select>
+
+	<select id="getLocalHotelByHotelId" parameterType="int" resultType="com.maknolja.vo.LocalHotel">
+		SELECT
+			ADDR_1				AS	addr1,
+			ADDR_2				AS	addr2,
+			AREA_CODE			AS	areaCode,
+			CAT1				AS	cat1,
+			CAT2				AS	cat2,
+			CAT3				AS	cat3,
+			CONTENT_ID			AS	id,
+			CREATED_DATE		AS	createdDate,
+			MAPX				AS	mapX,
+			MAPY				AS	maxY,
+			HOTEL_STAR			AS	hotelStar,
+			MODIFIED_DATE		AS	modifiedDate,
+			READ_COUNT			AS	readCount,
+			SIGUNGU_CODE		AS	sigunguCode,
+			TEL					AS	tel,
+			TITLE				AS	name,
+			ZIP_CODE			AS	zipCode,
+			FIRST_IMAGE			AS	firstImage,
+			SECOND_IMAGE		AS	secondImage,
+			STATUS				AS	status,
+			HOTEL_FRONT_DESK	AS	hasFrontDesk,
+			HOTEL_RESTAURANT	AS	hasrestaurant,
+			HOTEL_WIFI			AS	hasHotelWifi,
+			HOTEL_SMOKE_BAN		AS	hasSmokeBanArea,
+			HOTEL_COFFEE		AS	hasCoffeeShop
+		FROM
+			MNJ_HOTEL_LIST
+		WHERE
+			CONTENT_ID = #{value}
+	</select>
+
+
+</mapper>

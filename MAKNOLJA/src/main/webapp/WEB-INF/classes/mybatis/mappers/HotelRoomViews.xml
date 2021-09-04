@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maknolja.dao.HotelRoomViewDao">
+
+	<select id="getPossibleReserveRooms" resultType="com.maknolja.vo.HotelRoomView">
+		with calendar -- 2개월치 달력
+		AS (SELECT TO_CHAR(TRUNC(SYSDATE, 'MM') + LEVEL - 1, 'YYYY-MM-DD') DAY
+		FROM DUAL
+		CONNECT BY LEVEL <![CDATA[ <= ]]> (SELECT ceil(LAST_DAY(ADD_MONTHS(SYSDATE, 1)) - TRUNC(SYSDATE, 'MM'))FROM DUAL))
+		, RESERVED_ROOM_DAYS -- 예약된 방번호와 날짜
+		AS (select X.ROOM_ID, DAY
+		from MNJ_HOTEL_RESERVE X, CALENDAR Y
+		WHERE Y.DAY <![CDATA[ >= ]]> X.CHECKIN_DATE AND Y.DAY <![CDATA[ < ]]> X.CHECKOUT_DATE),
+		CHECKIN_CHECKOUT_DAYS -- 체크인/체크아웃 구간의 날짜, 체크아웃하는 날은 제외
+		AS (SELECT TO_CHAR(TRUNC(TO_DATE(#{checkIn})) + LEVEL - 1, 'YYYY-MM-DD') DAY
+		FROM DUAL
+		CONNECT BY LEVEL <![CDATA[ <= ]]> (SELECT ceil(TO_DATE(#{checkOut}) - TRUNC(TO_DATE(#{checkIn})))FROM DUAL))
+			SELECT
+				B.ROOM_ID				AS	roomId,
+				B.ROOM_TYPE		    	AS	type,
+				B.ROOM_MAX_GUEST		AS	maxGuest,
+				B.HOTEL_ID			    AS	hotelId,
+				B.ROOM_SIZE			    AS	roomSize,
+				B.ROOM_DESCRIBE		    AS	describe,
+				B.ROOM_BED_TYPE		    AS	bedType,
+				B.ROOM_VIEW			    AS	roomView,
+				B.ROOM_BED_COUNT		AS	bedCount,
+				B.ROOM_PRICE			AS	price,
+				B.ROOM_EVENT_PRICE  	AS	eventPrice,
+				B.ROOM_BREAKFAST		AS	breakfast,
+				B.ROOM_REF			    AS	roomRef,
+				B.ROOM_SHOWER_BOOTH 	AS	roomBooth,
+				B.ROOM_TV				AS	roomTv,
+				B.ROOM_AIRCON			AS	roomAircon,
+				B.ROOM_SMOKING	    	AS	roomSmoking,
+				B.ROOM_WIFI			    AS	roomWifi,
+				B.ROOM_PHOTO			AS	photo
+			FROM
+				MNJ_HOTEL_LIST A, MNJ_HOTEL_ROOMS B
+			WHERE
+				A.HOTEL_REGISTER_NO = B.HOTEL_ID
+			-- 검색조건 추가
+			AND
+				B.HOTEL_ID = #{hotelNo}
+			AND
+				ROOM_MAX_GUEST >= #{traveller}
+			AND
+				B.ROOM_ID NOT IN (SELECT X.ROOM_ID
+			FROM
+				RESERVED_ROOM_DAYS X, CHECKIN_CHECKOUT_DAYS Y
+			WHERE
+				X.DAY = Y.DAY)
+			ORDER BY
+				B.ROOM_SIZE ASC
+	</select>
+
+	<select id="getRealPossibleReserveRooms" resultType="com.maknolja.vo.HotelRoomView">
+		with calendar -- 2개월치 달력
+				 AS (SELECT TO_CHAR(TRUNC(SYSDATE, 'MM') + LEVEL - 1, 'YYYY-MM-DD') DAY
+					 FROM DUAL
+		CONNECT BY LEVEL <![CDATA[ <= ]]> (SELECT ceil(LAST_DAY(ADD_MONTHS(SYSDATE, 1)) - TRUNC(SYSDATE, 'MM'))FROM DUAL))
+				 , RESERVED_ROOM_DAYS -- 예약된 방번호와 날짜
+			AS (select X.ROOM_ID, DAY
+		from MNJ_HOTEL_RESERVE X, CALENDAR Y
+		WHERE Y.DAY <![CDATA[ >= ]]> X.CHECKIN_DATE AND Y.DAY <![CDATA[ < ]]> X.CHECKOUT_DATE),
+			CHECKIN_CHECKOUT_DAYS -- 체크인/체크아웃 구간의 날짜, 체크아웃하는 날은 제외
+			AS (SELECT TO_CHAR(TRUNC(TO_DATE(#{checkIn})) + LEVEL - 1, 'YYYY-MM-DD') DAY
+		FROM DUAL
+		CONNECT BY LEVEL <![CDATA[ <= ]]> (SELECT ceil(TO_DATE(#{checkOut}) - TRUNC(TO_DATE(#{checkIn})))FROM DUAL))
+		SELECT
+			B.ROOM_ID				AS	roomId,
+			B.ROOM_TYPE		    	AS	type,
+			B.ROOM_MAX_GUEST		AS	maxGuest,
+			B.HOTEL_ID			    AS	hotelId,
+			B.ROOM_SIZE			    AS	roomSize,
+			B.ROOM_DESCRIBE		    AS	describe,
+			B.ROOM_BED_TYPE		    AS	bedType,
+			B.ROOM_VIEW			    AS	roomView,
+			B.ROOM_BED_COUNT		AS	bedCount,
+			B.ROOM_PRICE			AS	price,
+			B.ROOM_EVENT_PRICE  	AS	eventPrice,
+			B.ROOM_BREAKFAST		AS	breakfast,
+			B.ROOM_REF			    AS	roomRef,
+			B.ROOM_SHOWER_BOOTH 	AS	roomBooth,
+			B.ROOM_TV				AS	roomTv,
+			B.ROOM_AIRCON			AS	roomAircon,
+			B.ROOM_SMOKING	    	AS	roomSmoking,
+			B.ROOM_WIFI			    AS	roomWifi,
+			B.ROOM_PHOTO			AS	photo
+		FROM
+			MNJ_HOTEL_LIST A, MNJ_HOTEL_ROOMS B
+		WHERE
+			A.HOTEL_REGISTER_NO = B.HOTEL_ID
+		-- 검색조건 추가
+		  AND
+			B.HOTEL_ID = #{hotelNo}
+		  AND
+			ROOM_MAX_GUEST >= #{traveller}
+		  AND
+
+			(with calendar -- 2개월치 달력
+			AS (SELECT TO_CHAR(TRUNC(SYSDATE, 'MM') + LEVEL - 1, 'YYYY-MM-DD') DAY
+			FROM DUAL
+			CONNECT BY LEVEL <![CDATA[ <= ]]> (SELECT ceil(LAST_DAY(ADD_MONTHS(SYSDATE, 1)) - TRUNC(SYSDATE, 'MM'))FROM DUAL))
+			, RESERVED_ROOM_DAYS -- 예약된 방번호와 날짜
+			AS (select X.ROOM_ID, DAY
+			from MNJ_HOTEL_RESERVE X, CALENDAR Y
+			WHERE Y.DAY <![CDATA[ >= ]]> X.CHECKIN_DATE AND Y.DAY <![CDATA[ < ]]> X.CHECKOUT_DATE),
+			CHECKIN_CHECKOUT_DAYS -- 체크인/체크아웃 구간의 날짜, 체크아웃하는 날은 제외
+			AS (SELECT TO_CHAR(TRUNC(TO_DATE(#{checkIn})) + LEVEL - 1, 'YYYY-MM-DD') DAY
+			FROM DUAL
+			CONNECT BY LEVEL <![CDATA[ <= ]]> (SELECT ceil(TO_DATE(#{checkOut}) - TRUNC(TO_DATE(#{checkIn})))FROM DUAL))
+			SELECT
+			COUNT(*)
+			FROM
+			MNJ_HOTEL_LIST A, MNJ_HOTEL_ROOMS B
+			WHERE
+			A.HOTEL_REGISTER_NO = B.HOTEL_ID
+		-- 검색조건 추가
+		  AND
+			B.HOTEL_ID = #{hotelNo}
+		  AND
+			ROOM_MAX_GUEST >= #{traveller}
+		  AND
+			B.ROOM_ID NOT IN (SELECT X.ROOM_ID
+			FROM
+			RESERVED_ROOM_DAYS X, CHECKIN_CHECKOUT_DAYS Y
+			WHERE
+			X.DAY = Y.DAY))
+			<![CDATA[ >= ]]> #{totalCount}
+
+		  AND
+			B.ROOM_ID NOT IN (SELECT X.ROOM_ID
+			FROM
+			RESERVED_ROOM_DAYS X, CHECKIN_CHECKOUT_DAYS Y
+			WHERE
+			X.DAY = Y.DAY)
+		ORDER BY
+			B.ROOM_SIZE ASC
+	</select>
+
+	<select id="getRoomsByHotelRoomName" resultType="com.maknolja.vo.HotelRoomView">
+		with calendar -- 2개월치 달력
+				 AS (SELECT TO_CHAR(TRUNC(SYSDATE, 'MM') + LEVEL - 1, 'YYYY-MM-DD') DAY
+					 FROM DUAL
+		CONNECT BY LEVEL <![CDATA[ <= ]]> (SELECT ceil(LAST_DAY(ADD_MONTHS(SYSDATE, 1)) - TRUNC(SYSDATE, 'MM'))FROM DUAL))
+				 , RESERVED_ROOM_DAYS -- 예약된 방번호와 날짜
+			AS (select X.ROOM_ID, DAY
+		from MNJ_HOTEL_RESERVE X, CALENDAR Y
+		WHERE Y.DAY <![CDATA[ >= ]]> X.CHECKIN_DATE AND Y.DAY <![CDATA[ < ]]> X.CHECKOUT_DATE),
+			CHECKIN_CHECKOUT_DAYS -- 체크인/체크아웃 구간의 날짜, 체크아웃하는 날은 제외
+			AS (SELECT TO_CHAR(TRUNC(TO_DATE(#{checkIn})) + LEVEL - 1, 'YYYY-MM-DD') DAY
+		FROM DUAL
+		CONNECT BY LEVEL <![CDATA[ <= ]]> (SELECT ceil(TO_DATE(#{checkOut}) - TRUNC(TO_DATE(#{checkIn})))FROM DUAL))
+		SELECT
+			B.ROOM_ID				AS	roomId,
+			B.ROOM_TYPE		    	AS	type,
+			B.ROOM_MAX_GUEST		AS	maxGuest,
+			B.HOTEL_ID			    AS	hotelId,
+			B.ROOM_SIZE			    AS	roomSize,
+			B.ROOM_DESCRIBE		    AS	describe,
+			B.ROOM_BED_TYPE		    AS	bedType,
+			B.ROOM_VIEW			    AS	roomView,
+			B.ROOM_BED_COUNT		AS	bedCount,
+			B.ROOM_PRICE			AS	price,
+			B.ROOM_EVENT_PRICE  	AS	eventPrice,
+			B.ROOM_BREAKFAST		AS	breakfast,
+			B.ROOM_REF			    AS	roomRef,
+			B.ROOM_SHOWER_BOOTH 	AS	roomBooth,
+			B.ROOM_TV				AS	roomTv,
+			B.ROOM_AIRCON			AS	roomAircon,
+			B.ROOM_SMOKING	    	AS	roomSmoking,
+			B.ROOM_WIFI			    AS	roomWifi,
+			B.ROOM_PHOTO			AS	photo
+		FROM
+			MNJ_HOTEL_LIST A, MNJ_HOTEL_ROOMS B
+		WHERE
+			A.HOTEL_REGISTER_NO = B.HOTEL_ID
+		AND
+			B.ROOM_TYPE=#{roomType}
+		AND
+			B.HOTEL_ID = #{hotelNo}
+		AND
+			B.ROOM_ID NOT IN (SELECT X.ROOM_ID
+		FROM
+			RESERVED_ROOM_DAYS X, CHECKIN_CHECKOUT_DAYS Y
+		WHERE
+			X.DAY = Y.DAY)
+		ORDER BY
+				B.ROOM_SIZE ASC
+	</select>
+
+</mapper>

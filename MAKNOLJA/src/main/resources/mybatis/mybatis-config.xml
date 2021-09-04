@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+	<!-- null 값의 입력과 로그를 보기 위한 설정 등록 -->
+	<settings>
+		<setting name="logImpl" value="LOG4J2" />
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+</configuration>

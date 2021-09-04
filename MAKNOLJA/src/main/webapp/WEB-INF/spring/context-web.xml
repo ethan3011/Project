@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+		
+		<!-- 사용자정의된 @LoginUser 어노테이션을 매개변수의 값으로 현재 로그인 된 유저의 정보를 받기 위하여 등록-->
+		<mvc:annotation-driven>
+			<mvc:argument-resolvers>
+				<bean class="com.maknolja.web.argumentResolver.LoginUserArgumentResolver" />
+			</mvc:argument-resolvers>
+		</mvc:annotation-driven>
+		
+		<!-- @LoginUser 어노테이션이 있는 모든 경로의 class를 확인하여 로그인 되지 않은 유저들을 redirect시키기 위하여 등록 -->
+		<mvc:interceptors>
+			<mvc:interceptor>
+				<mvc:mapping path="/**"/>
+				<mvc:exclude-mapping path="/resources/**"/>
+				<bean class="com.maknolja.web.interceptor.LoginCheckInterceptor"></bean>
+			</mvc:interceptor>
+		</mvc:interceptors>
+		
+		<!-- css, 이미지 등을 사용하기 위하여 등록 -->
+		<mvc:resources location="/resources/" mapping="/resources/**" />
+		
+		<!-- com.maknola.web 안에 있는 모든 파일들을 스캔 및 스프링의 빈으로 등록하기 위하여 등록 -->
+		<context:component-scan base-package="com.maknolja.web" />
+		
+		<!-- 뷰 이름이 없을경우 적절한 뷰 이름을 전달받고 요청핸들러의 뷰 앞, 뒤에 사용될 경로를 추가하기 위하여 등록 -->
+		<bean id="viewResolver" 
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+			<property name="prefix" value="/WEB-INF/views/" />
+			<property name="suffix" value=".jsp" />
+		</bean>
+</beans>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maknolja.dao.NewsDao">
+
+    <select id="getAllNewsWithoutFirst" resultType="com.maknolja.vo.News">
+        SELECT
+            NEWS_NO                             as newsNo,
+            NEWS_WRITER                         as writer,
+            NEWS_TITLE                          as title,
+            NEWS_CONTENT                        as content,
+            NEWS_MAIN_IMAGES_FILE               as mainImage,
+            NEWS_MAIN_SUB_IMAGES_FILE           as subImage,
+            NEWS_CREATED_DATE                   as createdDate,
+            NEWS_UPDATED_DATE                   as updateDate,
+            NEWS_DELETED_DATE                   as deletedDate,
+            NEWS_STATUS                         as status
+        FROM
+            MNJ_NEWS
+        WHERE
+            NEWS_NO &gt; (SELECT MIN(NEWS_NO) FROM MNJ_NEWS)
+        ORDER BY
+            NEWS_NO ASC
+    </select>
+
+    <select id="getLatestNews" resultType="com.maknolja.vo.News">
+        SELECT
+            NEWS_NO                             as newsNo,
+            NEWS_WRITER                         as writer,
+            NEWS_TITLE                          as title,
+            NEWS_CONTENT                        as content,
+            NEWS_MAIN_IMAGES_FILE               as mainImage,
+            NEWS_MAIN_SUB_IMAGES_FILE           as subImage,
+            NEWS_CREATED_DATE                   as createdDate,
+            NEWS_UPDATED_DATE                   as updateDate,
+            NEWS_DELETED_DATE                   as deletedDate,
+            NEWS_STATUS                         as status
+        FROM
+            MNJ_NEWS
+        WHERE
+            NEWS_NO = (SELECT MIN(NEWS_NO) FROM MNJ_NEWS)
+    </select>
+
+    <select id="getNewsByNo" parameterType="int" resultType="com.maknolja.vo.News">
+        SELECT
+            NEWS_NO                             as newsNo,
+            NEWS_WRITER                         as writer,
+            NEWS_TITLE                          as title,
+            NEWS_CONTENT                        as content,
+            NEWS_MAIN_IMAGES_FILE               as mainImage,
+            NEWS_MAIN_SUB_IMAGES_FILE           as subImage,
+            NEWS_CREATED_DATE                   as createdDate,
+            NEWS_UPDATED_DATE                   as updateDate,
+            NEWS_DELETED_DATE                   as deletedDate,
+            NEWS_STATUS                         as status
+        FROM
+            MNJ_NEWS
+        WHERE
+            NEWS_NO = #{VALUE}
+    </select>
+
+</mapper>

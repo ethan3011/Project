@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<!-- 
+	com.maknolja.dao.UserDao 매퍼인터페이스에 대한 매퍼파일(SQL이 정의된 파일)정의
+ -->
+<mapper namespace="com.maknolja.dao.UserDao">
+	<!-- 
+		MNJ_USER 테이블의 컬럼명과 com.maknolja.vo.User의 멤버변수명을 매핑시킨다.
+	 -->
+	<resultMap  id="UserResultMap" type="com.maknolja.vo.User">
+		<id column="user_id" property="id" />
+		<result column="user_password" property="password" />
+		<result column="user_status" property="status" />
+		<result column="user_kor_last_name" property="korLastName" />
+		<result column="user_kor_first_name" property="korFirstName" />
+		<result column="user_eng_last_name" property="engLastName" />
+		<result column="user_eng_first_name" property="engFirstName" />
+		<result column="user_gender" property="gender" />
+		<result column="user_address" property="address" />
+		<result column="user_phone" property="phone" />
+		<result column="user_card_status" property="cardStatus" />
+		<result column="user_point" property="point" />
+		<result column="user_passport_status" property="passportStatus" />
+		<result column="user_gov_id_status" property="govIdStatus" />
+		<result column="user_created_date" property="createdDate" />
+		<result column="user_updated_date" property="updatedDate" />
+		<result column="user_deleted_date" property="deletedDate" />
+		<result column="user_country" property="country" />
+		<result column="user_birth" property="birth" />
+	</resultMap>
+
+	<select id="getUserById" parameterType="string" resultMap="UserResultMap">		
+	select
+			*
+		from
+			mnj_user
+		where
+			user_id = #{value}
+	</select>
+	
+	<insert id="insertUser" parameterType="com.maknolja.vo.User">
+		insert into mnj_user
+		(user_id, user_password )
+		values
+		(#{id}, #{password} )
+	</insert>
+	
+</mapper>
+

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maknolja.dao.CoronaPolicyDao">
+
+    <select id="getAllPolices" resultType="com.maknolja.vo.CoronaPolicy">
+        SELECT
+            COUNTRY_NAME            AS  countryName,
+            COUNTRY_CODE            AS  countryCode,
+            CONTENT_TEXT            AS  textContent,
+            COUNTRY_UPDATE_DATE     AS  updateDate,
+            COUNTRY_TITLE           AS  textTitle
+
+        FROM
+            MNJ_CORONA_POLICY
+    </select>
+
+    <select id="getCoronaPolicyByCode" parameterType="string" resultType="com.maknolja.vo.CoronaPolicy">
+        SELECT
+            COUNTRY_NAME            AS  countryName,
+            COUNTRY_CODE            AS  countryCode,
+            CONTENT_TEXT            AS  textContent,
+            COUNTRY_UPDATE_DATE     AS  updateDate,
+            COUNTRY_TITLE           AS  textTitle
+        FROM
+            MNJ_CORONA_POLICY
+        WHERE
+            COUNTRY_CODE = #{VALUE}
+    </select>
+
+</mapper>

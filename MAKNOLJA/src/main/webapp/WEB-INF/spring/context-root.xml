@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	   xmlns:p="http://www.springframework.org/schema/p"
+	   xmlns:tx="http://www.springframework.org/schema/tx"
+	   xsi:schemaLocation="http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd"
+>
+
+	<!-- com.maknolja.service에 있는 모든 객체를 스프링의 빈으로 등록 -->
+	<context:annotation-config/>
+	<context:component-scan base-package="com.maknolja.service"/>
+	<context:component-scan base-package="com.maknolja.config" />
+
+	<!-- mailSencer -->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+		<property name="host" value="smtp.gmail.com" />
+		<property name="port" value="587" />
+		<property name="username" value="eknnnooosw@gmail.com" />
+		<property name="password" value="evsrbqdgqqknpyme" />
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">true</prop>
+				<prop key="mail.smtp.starttls.enable">true</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- DBCP 연결 (아마존 RDS) -->
+	<bean id="dataSource"
+		  class="org.apache.commons.dbcp2.BasicDataSource"
+		  p:driverClassName="oracle.jdbc.OracleDriver"
+		  p:url="jdbc:oracle:thin:@ethandb.c9trxw7mlitk.ap-northeast-2.rds.amazonaws.com:1521:ETHAN"
+		  p:username="admin"
+		  p:password="Wkqkroqkfwk100$"/>
+
+	<!--
+		TransactionManager를 스프링의 빈으로 등록
+	 -->
+	<bean id="transactionManager"
+		  class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		  p:dataSource-ref="dataSource"/>
+
+	<!--
+		@Transaction 어노테이션이 지정된 객체들을 스프링 컨테이너의 빈으로 등록
+	 -->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+	<!-- sqlSessionFactory 생성 및 mybaits 설정, *.xml을 스프링의 빈으로 등록 -->
+	<bean id="sqlSessionFactory"
+		  class="org.mybatis.spring.SqlSessionFactoryBean"
+		  p:dataSource-ref="dataSource"
+		  p:configLocation="classpath:/mybatis/mybatis-config.xml"
+		  p:mapperLocations="classpath:/mybatis/mappers/*.xml"/>
+
+	<!-- com.maknolja.dao에 있는 모든 객체를 스프링의 빈으로 등록 -->
+	<mybatis-spring:scan
+			base-package="com.maknolja.dao"
+			factory-ref="sqlSessionFactory"/>
+
+</beans>

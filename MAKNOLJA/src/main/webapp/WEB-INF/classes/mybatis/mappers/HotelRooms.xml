@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maknolja.dao.HotelRoomDtoDao">
+
+
+	<select id="getSearchByName" parameterType="string" resultType="com.maknolja.vo.HotelRoomDtoVo">
+		SELECT
+			L.ADDR_1					AS	addr1,
+			L.ADDR_2					AS	addr2,
+			L.AREA_CODE					AS	areaCode,
+			L.CAT1						AS	cat1,
+			L.CAT2						AS	cat2,
+			L.CAT3						AS	cat3,
+			L.CONTENT_ID				AS	id,
+			L.CREATED_DATE				AS	createdDate,
+			L.MAPX						AS	mapX,
+			L.MAPY						AS	maxY,
+			L.HOTEL_STAR				AS	hotelStar,
+			L.MODIFIED_DATE				AS	modifiedDate,
+			L.READ_COUNT				AS	readCount,
+			L.SIGUNGU_CODE				AS	sigunguCode,
+			L.TEL						AS	tel,
+			L.TITLE						AS	name,
+			L.ZIP_CODE					AS	zipCode,
+			L.FIRST_IMAGE				AS	firstImage,
+			L.SECOND_IMAGE				AS	secondImage,
+			L.STATUS					AS	status,
+			S.HOTEL_ID					AS	hotelId,
+			S.ROOM_ID					AS	roomId,
+			S.ROOM_NO					AS	roomNo,
+			S.ROOM_TYPE					AS	roomType,
+			S.ROOM_SIZE					AS	roomSize,
+			S.ROOM_PRICE				AS	roomPrice,
+			S.ROOM_EVENT_PRICE			AS	roomEventPrice,
+			S.ROOM_DESCRIBE				AS	roomDescribe,
+			S.ROOM_BED_TYPE				AS	roomBedType,
+			S.ROOM_VIEW					AS	roomView,
+			S.ROOM_BED_COUNT			AS	roomBedCount,
+			S.ROOM_BREAKFAST			AS	isBreakfast,
+			S.ROOM_REF					AS	isRoomRef,
+			S.ROOM_SHOWER_BOOTH			AS	isShowerBooth,
+			S.ROOM_TV					AS	isRoomTv,
+			S.ROOM_AIRCON				AS	isRoomAircon,
+			S.ROOM_SMOKING				AS	isRoomSmoking,
+			S.ROOM_WIFI					AS	isRoomWifi,
+			S.ROOM_PHOTO				AS	roomPhoto,
+			S.ROOM_MAX_GUEST			AS	roomMaxGuest,
+			S.ROOM_STATUS				AS	roomStatus,
+			S.ROOM_CREATED_DATE			AS	roomCreatedDate,
+			S.ROOM_UPDATE_DATE			AS	roomUpdatedDate,
+			S.ROOM_DELETED_DATE			AS	roomDeletedDate
+		FROM
+			MNJ_HOTEL_LIST L, (SELECT * FROM MNJ_HOTEL_ROOMS ORDER BY ROOM_EVENT_PRICE ASC) S
+		WHERE
+			L.HOTEL_REGISTER_NO = S.HOTEL_ID
+		  AND
+			L.TITLE = #{value}
+		  AND
+			ROWNUM = 1
+		ORDER BY
+			S.ROOM_EVENT_PRICE ASC
+	</select>
+
+
+	<select id="getSearchByAreaName" parameterType="string" resultType="com.maknolja.vo.HotelRoomDtoVo">
+		SELECT
+			L.ADDR_1        			AS	addr1,
+			L.ADDR_2					AS	addr2,
+			L.AREA_CODE					AS	areaCode,
+			L.CAT1						AS	cat1,
+			L.CAT2						AS	cat2,
+			L.CAT3						AS	cat3,
+			L.CONTENT_ID				AS	id,
+			L.CREATED_DATE				AS	createdDate,
+			L.MAPX						AS	mapX,
+			L.MAPY						AS	maxY,
+			L.HOTEL_STAR				AS	hotelStar,
+			L.MODIFIED_DATE				AS	modifiedDate,
+			L.READ_COUNT				AS	readCount,
+			L.SIGUNGU_CODE				AS	sigunguCode,
+			L.TEL						AS	tel,
+			L.TITLE						AS	name,
+			L.ZIP_CODE					AS	zipCode,
+			L.FIRST_IMAGE				AS	firstImage,
+			L.SECOND_IMAGE				AS	secondImage,
+			L.STATUS					AS	status,
+			S.HOTEL_ID					AS	hotelId,
+			S.ROOM_ID					AS	roomId,
+			S.ROOM_NO					AS	roomNo,
+			S.ROOM_TYPE					AS	roomType,
+			S.ROOM_SIZE					AS	roomSize,
+			S.ROOM_PRICE				AS	roomPrice,
+			S.ROOM_EVENT_PRICE			AS	roomEventPrice,
+			S.ROOM_DESCRIBE				AS	roomDescribe,
+			S.ROOM_BED_TYPE				AS	roomBedType,
+			S.ROOM_VIEW					AS	roomView,
+			S.ROOM_BED_COUNT			AS	roomBedCount,
+			S.ROOM_BREAKFAST			AS	isBreakfast,
+			S.ROOM_REF					AS	isRoomRef,
+			S.ROOM_SHOWER_BOOTH			AS	isShowerBooth,
+			S.ROOM_TV					AS	isRoomTv,
+			S.ROOM_AIRCON				AS	isRoomAircon,
+			S.ROOM_SMOKING				AS	isRoomSmoking,
+			S.ROOM_WIFI					AS	isRoomWifi,
+			S.ROOM_PHOTO				AS	roomPhoto,
+			S.ROOM_MAX_GUEST			AS	roomMaxGuest,
+			S.ROOM_STATUS				AS	roomStatus,
+			S.ROOM_CREATED_DATE			AS	roomCreatedDate,
+			S.ROOM_UPDATE_DATE			AS	roomUpdatedDate,
+			S.ROOM_DELETED_DATE			AS	roomDeletedDate
+		FROM
+			MNJ_HOTEL_LIST L, MNJ_HOTEL_ROOMS S
+		WHERE
+			L.HOTEL_REGISTER_NO = S.HOTEL_ID
+		  AND
+			L.STATUS = 'Y'
+		  AND
+			S.ROOM_NO = 101
+		  AND
+			L.ADDR_1 LIKE '%' || #{value} || '%'
+		ORDER BY
+			L.TITLE ASC
+	</select>
+
+
+</mapper>

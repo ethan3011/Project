@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maknolja.dao.AirLineDao">
+
+    <select id="getAirLineInfoByEngName" parameterType="string" resultType="com.maknolja.vo.AirLine">
+        SELECT
+            AIRLINE_ENG_NAME        AS  airLineEngName,
+            AIRLINE_KOR_NAME        AS  airLineKorName,
+            IATA_CODE               AS  ITAT,
+            ICAO_CODE               AS  ICAO,
+            AIRLINE_STATE           AS  state,
+            AIRLINE_MODEL           AS  model,
+            AIRLINE_COUNTRY         AS  country,
+            AIRLINE_AERA            AS  area,
+            AIRLINE_IMAGE           AS  image,
+            AIRLINE_LINK            AS  link
+        FROM
+            MNJ_AIRLINE_INFO
+        WHERE
+            UPPER(AIRLINE_ENG_NAME) LIKE #{value}||'%'
+    </select>
+
+
+</mapper>

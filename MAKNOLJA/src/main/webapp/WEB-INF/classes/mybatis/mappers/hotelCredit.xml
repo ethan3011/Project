@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maknolja.dao.HotelCreditDao">
+
+	<insert id="insertHotel" parameterType="com.maknolja.vo.HotelReservation">
+		insert into MNJ_HOTEL_RESERVE
+		(
+			BOOKING_NO,
+			USER_ID,
+			CHECKIN_DATE,
+			CHECKOUT_DATE,
+			ROOM_ID,
+			USER_FIRSTNAME,
+			USER_LASTNAME,
+			BOOKING_PRICE,
+			BOOKING_ADULT,
+			BOOKING_CHILD,
+			BOOKING_ROOM,
+			USER_PHONE,
+			HOTEL_NO,
+			BOOKING_MEMO
+		)
+		values
+		(
+			HOTEL_RESERVATION_SEQ.NEXTVAL, #{userId}, #{checkInDate}, #{checkOutDate},
+			#{roomNo},#{firstName},#{lastName},#{bookingPrice},#{adultCount},#{childCount},
+			#{roomCount},#{phone},#{hotelNo},#{memo}
+		)
+	</insert>
+
+</mapper>

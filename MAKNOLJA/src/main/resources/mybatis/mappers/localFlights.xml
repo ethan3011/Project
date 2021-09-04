@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maknolja.dao.LocalFlightDao">
+
+	<!-- 모든 국내 비행 내역을 반환한다. -->
+	<select id="getAllFlights" resultType="com.maknolja.vo.LocalFlight">
+		select
+			FLY_ENG_NAME					as	engName,
+			FLY_KOR_NAME					as	korName,
+			FLY_START_CITY_NAME				as	startCityName,
+			FLY_START_DATE					as	startDate,
+			FLY_START_TIEM					as	startTiem,
+			FLY_START_AIRPORT_CODE			as	startAirPortCode,
+			FLY_ARRIVE_CITY_NAME			as	arriveCityName,
+			FLY_END_DATE					as	endDate,
+			FLY_ARRIVE_TIME					as	arriveTime,
+			FLY_ARRIVE_AIRPORT_CODE			as	arriveAirportCode,
+			FLY_AIRPLANE_NO					as	airplanceNo,
+			FLY_FLIGHT_TYPE					as	flightType,
+			FLY_MONDAY						as	mon,
+			FLY_TUESDAY						as	tue,
+			FLY_WEDNESDAY					as	wed,
+			FLY_THURSDAY					as	thu,
+			FLY_FRIDAY						as	fri,
+			FLY_SATURDAY					as	sat,
+			FLY_SUNDAY						as	sun,
+			FLY_AVAILABLE_SEAT				as	availableSeat,
+			FLY_RESERVE_SEAT				as	reserveSeat,
+			FLY_CANCELD_SEAT				as	canceldSeat,
+			FLY_CREATED_DATE				as	createdDate,
+			FLY_UPDATED_DATE				as	updatedDate,
+			FLY_DELETED_DATE				as	deletedDate,
+			FLY_STATUS						as	flyStatus
+		from
+			MNJ_LOCAL_FLIGHT_INFO
+	</select>
+
+	<select id="getFlightsStartCityNames" resultType="com.maknolja.vo.LocalFlight">
+		SELECT
+			FLY_START_CITY_NAME as startCityName, FLY_START_AIRPORT_CODE as startAirPortCode
+		FROM
+			MNJ_LOCAL_FLIGHT_INFO
+
+		UNION
+
+		SELECT
+			INTER_FLY_START_CITY_NAME, INTER_FLY_START_AIRPORT_CODE
+		FROM
+			MNJ_INTER_FLIGHT_INFO
+		ORDER BY
+			startCityName ASC
+	</select>
+
+	<select id="getFlightsArriveCityNames" resultType="com.maknolja.vo.LocalFlight">
+		SELECT
+			FLY_ARRIVE_CITY_NAME as arriveCityName, FLY_ARRIVE_AIRPORT_CODE as arriveAirportCode
+		FROM
+			MNJ_LOCAL_FLIGHT_INFO
+
+		UNION
+
+		SELECT
+			INTER_FLY_ARRIVE_CITY_NAME, INTER_FLY_ARRIVE_AIRPORT_CODE
+		FROM
+			MNJ_INTER_FLIGHT_INFO
+		ORDER BY
+			arriveCityName ASC
+	</select>
+
+	<select id="getSearchticketlist" resultType="com.maknolja.vo.LocalFlight">
+		select
+		i.FLY_ENG_NAME                    	as    engName,           <!--영문이름-->
+		i.FLY_KOR_NAME                    	as    korName,           <!--한국이름-->
+		i.FLY_START_CITY_NAME              	as    startCityName,     <!--출발공항이름-->
+		i.FLY_START_DATE                   	as    startDate,         <!--출발날짜-->
+		i.FLY_START_TIME                    as    startTime,         <!--출발시간-->
+		i.FLY_START_AIRPORT_CODE            as    startAirPortCode,  <!--출발공항코드-->
+		i.FLY_ARRIVE_CITY_NAME              as    arriveCityName,    <!--도착공항이름-->
+		i.FLY_ARRIVE_TIME                   as    arriveTime,        <!--도착시간-->
+		i.FLY_ARRIVE_AIRPORT_CODE           as    arriveAirportCode, <!--도착공항코드-->
+		i.FLY_AIRPLANE_NO                   as    airplanceNo,       <!--항공편-->
+		i.FLY_AVAILABLE_SEAT               	as    availableSeat,
+		i.FLY_RESERVE_SEAT                	as    reserveSeat,
+		i.FLY_CANCELD_SEAT                	as    canceldSeat,
+		i.FLY_CREATED_DATE                	as    createdDate,
+		i.FLY_UPDATED_DATE                	as    updatedDate,
+		i.FLY_DELETED_DATE                	as    deletedDate,
+		i.FLY_STATUS                        as    flyStatus,
+		s.FIRSTSEAT                         as    firstSeat,        <!--일등석-->
+		s.BUSINESS                          as    business,         <!--비즈니스석-->
+		s.ECONOMY                           as    economy,          <!--이코노미석-->
+		s.FIRSTSEAT_PRICE                   as    firstSeatPrice,   <!--일등석 가격-->
+		s.BUSINESS_PRICE                    as    businessPrice,    <!--비즈니스석 가격-->
+		s.ECONOMY_PRICE                     as    economyPrice      <!--이코노미석 가격-->
+		from
+		mnj_local_flight_info i , mnj_local_flight_seat s
+		where
+		FLY_START_AIRPORT_CODE = #{startAirPortCode} <!--출발공항코드   -->
+		AND
+		FLY_ARRIVE_AIRPORT_CODE = #{arriveAirportCode}  <!--도착 공항코드-->
+		AND
+		i.fly_airplane_no = s.fly_airplane_no <!--항공편-->
+		and
+		i.fly_start_date  = s.flying_date     <!-- 날짜-->
+		and
+		TO_DATE(FLY_START_DATE,'MM/DD/YYYY') = TO_DATE(#{startDate},'MM/DD/YYYY')
+
+	</select>
+
+	<insert id="startDayCreadit" parameterType="com.maknolja.vo.LocalFlightCreditInfo">
+		insert into MNJ_FLIGHT_CREDIT_INFO
+		(
+		USER_ID,										<!-- 유저아이디 -->
+		FLIGHT_STDAY_SEAT,								<!-- 좌석 -->
+		FLIGHT_STDAY_TIME,                             <!--출발시간(가는날)-->
+		FLIGHT_STDAY_AIRPORT_KOR,                      <!--출발공항 한국이름(가는날)-->
+		FLIGHT_STDAY_AIRPLANE_CODE,           			<!--비행편명 코드(가는날)-->
+		FLIGHT_STDAY_AIRPORT_ENG,                      <!--출발공항 영어이름(가는날)-->
+		FLIGHT_STDAY_AIRPORT_CODE,                     <!--출발공항 코드(가는날)-->
+		FLIGHT_STDAY_END_AIRPORT_CODE,                 <!--도착공항 코드(가는날)-->
+		FLIGHT_STDAY_END_TIME,	                        <!--도착시간(가는날)-->
+		FLIGHT_STDAY_AIR_PRICE,							<!-- 가격 -->
+		FLIGHT_STDAY_DATE,								<!-- 출날발짜 -->
+		FLIGHT_RTDAY_DATE								<!-- 돌아오는날짜 -->
+		)
+
+		values
+		(#{userId},#{stdaySeat},#{stdayTime},#{stdayAirportKor},#{stdayAirplaneCode},#{stdayAirportEng},#{stdayAirportCode},
+		#{stdayEndAirportCode},#{stdayEndTime},#{stdayAirPrice},#{stdayDate},#{rtdayDate})
+	</insert>
+
+	<update  id="comebackCreadit" parameterType="com.maknolja.vo.LocalFlightCreditInfo">
+		update
+		MNJ_FLIGHT_CREDIT_INFO
+		set
+		FLIGHT_RTDAY_TIME = #{rtdayTime},                             <!--출발시간(가는날)-->
+		FLIGHT_RTDAY_AIRPORT_KOR = #{rtdayAirportKor},                      <!--출발공항 한국이름(가는날)-->
+		FLIGHT_RTDAY_AIRPLANE_CODE = #{rtdayAirplaneCode},           			<!--비행편명 코드(가는날)-->
+		FLIGHT_RTDAY_AIRPORT_ENG =#{rtdayAirportEng},                      <!--출발공항 영어이름(가는날)-->
+		FLIGHT_RTDAY_AIRPORT_CODE =#{rtdayAirportCode},                     <!--출발공항 코드(가는날)-->
+		FLIGHT_RTDAY_END_AIRPORT_CODE =#{rtdayEndAirportCode},                 <!--도착공항 코드(가는날)-->
+		FLIGHT_RTDAY_END_TIME = #{rtdayEndTime},                     			  <!--도착시간(가는날)-->
+		FLIGHT_RTDAY_RETURN_AIR_PRICE =#{rtdayAirPrice}                  			 <!-- 오는날 비행기값-->
+		where
+		USER_ID = #{userId}													 <!--유저아이디-->
+		AND FLIGHT_STDAY_TIME = #{stdayTime}									 <!--출발시간-->
+		AND TO_DATE(FLIGHT_STDAY_DATE,'YYYY/MM/DD') = TO_DATE(#{stdayDate},'YYYY/MM/DD')
+		<!--  AND FLIGHT_STDAY_DATE =#{startDate} -->							 <!--출발날짜-->
+		AND FLIGHT_STDAY_AIRPLANE_CODE= #{stdayAirplaneCode}							 <!--항공편-->
+		AND FLIGHT_STDAY_AIRPORT_CODE= #{stdayAirportCode}								 <!--출발 항공사코드-->
+		AND FLIGHT_STDAY_END_AIRPORT_CODE= #{stdayEndAirportCode}							 <!--도착항공사코드-->
+	</update>
+
+	<select id="registerinfo"  resultType="com.maknolja.vo.LocalFlightCreditInfo" parameterType="com.maknolja.vo.LocalFlightCreditInfo">
+		select
+		flight_stday_time 					as stdayTime,							<!--출발시간  -->
+		flight_stday_end_time 				as stdayEndTime,						<!--도착시간  -->
+		flight_stday_airport_code			as stdayAirportCode,					<!--출발공항코드   -->
+		flight_stday_end_airport_code		as stdayEndAirportCode,				<!--도착공항코드   -->
+		flight_stday_airport_kor				as stdayAirportKor,					<!--출발공항 한국이름   -->
+		flight_stday_airplane_code			as stdayAirplaneCode,						<!--출발 항공편   -->
+		flight_stday_air_price				as stdayAirPrice,						<!--출발 가격(좌석 )   -->
+		flight_rtday_time					as rtdayTime,							<!--돌아오는 비행기 출발시간  -->
+		flight_rtday_end_time				as rtdayEndTime,						<!--돌아오는 비행기 도착시간  -->
+		flight_rtday_airport_code			as rtdayAirportCode,					<!--돌아오는 출발공항코드  -->
+		flight_rtday_end_airport_code		as rtdayEndAirportCode,				<!--돌아오는 도착공항코드  -->
+		flight_rtday_airport_kor				as rtdayAirportKor,					<!--돌아오는 항공한국이름  -->
+		flight_rtday_airplane_code			as rtdayAirplaneCode,					<!--돌아오는 항공편  -->
+		flight_rtday_return_air_price		as rtdayAirPrice,				<!--돌아오는 가격(좌석)  -->
+		flight_stday_seat					as rtdaySeat,							<!--가격별 좌석표시 if문 작업필요  -->
+		flight_stday_date					as stdayDate,						<!-- 가는날 비행날짜 -->
+		flight_rtday_date					as rtdayDate						<!-- 오느날 비행날짜 -->
+
+		from
+		mnj_flight_credit_info
+		where
+		user_id =	#{userId}								<!-- 유저아이디 -->
+		and flight_stday_time=#{stdayTime}				<!-- 출발시간 -->
+		and flight_stday_airplane_code=#{stdayAirplaneCode}		<!-- 출발 항공편 -->
+		AND FLIGHT_RTDAY_AIRPLANE_CODE=#{rtdayAirplaneCode}		<!-- 도착항공편 -->
+		AND FLIGHT_STDAY_AIRPORT_CODE=#{stdayAirportCode}			<!-- 출발공항코드 -->
+		AND FLIGHT_STDAY_END_AIRPORT_CODE=#{stdayEndAirportCode}	<!-- 도착공항코드 -->
+	</select>
+
+	<insert id="reserve" parameterType="com.maknolja.vo.LocalFlightReserve">
+		insert into mnj_local_flight_reservation
+		(
+			USER_ID											,
+			FLIGHT_STDAY_DATE								,
+			FLIGHT_RTDAY_DATE								,
+			FLIGHT_STDAY_TIME                               ,
+			FLIGHT_STDAY_AIRPORT_KOR                        ,
+			FLIGHT_STDAY_AIRPLANE_CODE                      ,
+			FLIGHT_STDAY_AIRPORT_CODE                       ,
+			FLIGHT_STDAY_END_AIRPORT_CODE                   ,
+			FLIGHT_STDAY_END_TIME                           ,
+			FLIGHT_STDAY_AIR_PRICE                          ,
+			FLIGHT_RTDAY_TIME                               ,
+			FLIGHT_RTDAY_AIRPORT_KOR                        ,
+			FLIGHT_RTDAY_AIRPLANE_CODE                      ,
+			FLIGHT_RTDAY_AIRPORT_CODE                       ,
+			FLIGHT_RTDAY_END_AIRPORT_CODE                   ,
+			FLIGHT_RTDAY_END_TIME                           ,
+			FLIGHT_RTDAY_RETURN_AIR_PRICE                   ,
+			FLIGHT_PASSENGER_FIRSTNAME                      ,
+			FLIGHT_PASSENGER_LASTNAME                       ,
+			FLIGHT_PASSENGER_GENDER                         ,
+			FLIGHT_PASSENGER_DOB                            ,
+			FLIGHT_PASSENGER_NA                             ,
+			FLIGHT_PASSENGER_PASSPORT                       ,
+			FLIGHT_PASSENGER_PASSNO                         ,
+			FLIGHT_PASSENGER_IFNAME                         ,
+			FLIGHT_PASSENGER_IFEMAIL                        ,
+			FLIGHT_PASSENGER_IFPHONE
+		)
+		values
+			(#{userId},#{stdayDate},#{rtdayDate},#{stdayTime},#{stdayAirportKor},#{stdayAirplaneCode},#{stdayAirportCode},#{stdayEndAirportCode},#{stdayEndTime},#{stdayAirPrice},#{rtdayTime},#{rtdayAirportKor}
+			,#{rtdayAirPlaneCode},#{rtdayAirportCode},#{rtdayEndAirportCode},#{rtdayEndTime},#{rtdayReturnAirPrice},#{firstName},#{lastName},#{gender},#{dob},#{na},#{passPort},#{passNo},#{ifName},#{ifEmail},#{ifPhone})
+	</insert>
+	
+	<update id="payClear" parameterType="com.maknolja.vo.LocalFlightReserve">
+	UPDATE
+			 MNJ_LOCAL_FLIGHT_RESERVATION
+			
+	SET 
+			FLIGHT_PAYMENT_FINISHED = #{payStatus},
+			FLIGHT_USER_CARD_NO =#{userCardNo}
+
+	WHERE
+			USER_ID = #{userId}
+			AND FLIGHT_PASSENGER_PASSNO = #{passNo}
+			AND FLIGHT_PASSENGER_IFPHONE = #{ifPhone}
+			AND FLIGHT_STDAY_TIME= #{stdayTime}
+			AND FLIGHT_STDAY_END_TIME= #{stdayEndTime}
+			AND FLIGHT_RTDAY_TIME= #{rtdayTime}
+			AND FLIGHT_RTDAY_END_TIME= #{rtdayEndTime}
+			AND FLIGHT_STDAY_AIRPLANE_CODE= #{stdayAirplaneCode}
+			AND FLIGHT_RTDAY_AIRPLANE_CODE= #{rtdayAirPlaneCode}
+			AND FLIGHT_STDAY_DATE = #{stdayDate} 							<!-- >'2021/09/09 -->
+			AND FLIGHT_RTDAY_DATE = #{rtdayDate}
+			AND	FLIGHT_STDAY_AIRPORT_CODE = #{stdayAirportCode}
+			AND FLIGHT_STDAY_END_AIRPORT_CODE= #{stdayEndAirportCode}
+			AND FLIGHT_RTDAY_AIRPORT_CODE= #{rtdayAirportCode}
+			AND FLIGHT_RTDAY_END_AIRPORT_CODE= #{rtdayEndAirportCode}
+			
+	</update>
+
+</mapper>

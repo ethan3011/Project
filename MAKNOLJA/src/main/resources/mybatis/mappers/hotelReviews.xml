@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.maknolja.dao.hotelReviewDao">
+    <insert id="insertScore" parameterType="com.maknolja.vo.HotelReview">
+        INSERT INTO MNJ_HOTEL_REVIEW
+        (
+            REVIEW_NO,
+            REVIEW_CREATED_DATE,
+            REVIEW_UPDATED_DATE,
+            REVIEW_DELETED_DATE,
+            REVIEW_STATUS,
+            REVIEW_CONTENT,
+            REVIEW_USER_ID,
+            REVIEW_HOTEL_REGISTER_NO,
+            REVIEW_CLEAN_SCORE,
+            REVIEW_FACILITY_SCORE,
+            REVIEW_LOCATION_SCORE,
+            REVIEW_SERVICE_SCORE
+        )
+        values
+            (
+                #{reviewNo},
+                #{createdDate},
+                #{updatedDate},
+                #{deletedDate},
+                #{status},
+                #{content},
+                #{userId},
+                #{hotelRegisterNo},
+                #{cleanScore},
+                #{facilityScore},
+                #{locationScore},
+                #{serviceScore}
+            )
+    </insert>
+
+    <update id="updateScore" parameterType="com.maknolja.vo.HotelReview">
+        UPDATE MNJ_HOTEL_REVIEW
+        SET
+            REVIEW_UPDATED_DATE     =   #{updatedDate},
+            REVIEW_DELETED_DATE     =   #{deletedDate},
+            REVIEW_STATUS           =   #{status},
+            REVIEW_CONTENT          =   #{content},
+            REVIEW_CLEAN_SCORE      =   #{cleanScore},
+            REVIEW_FACILITY_SCORE   =   #{facilityScore},
+            REVIEW_LOCATION_SCORE   =   #{locationScore},
+            REVIEW_SERVICE_SCORE    =   #{serviceScore}
+        WHERE
+            REVIEW_NO = #{reviewNo}
+    </update>
+
+    <select id="getReviewByHotel" parameterType="int" resultType="com.maknolja.vo.HotelReview">
+        SELECT
+            REVIEW_NO                       AS  reviewNo,
+            REVIEW_CREATED_DATE             AS  createdDate,
+            REVIEW_UPDATED_DATE             AS  updatedDate,
+            REVIEW_DELETED_DATE             AS  deletedDate,
+            REVIEW_STATUS                   AS  status,
+            REVIEW_CONTENT                  AS  content,
+            REVIEW_USER_ID                  AS  userId,
+            REVIEW_HOTEL_REGISTER_NO        AS  hotelRegisterNo,
+            REVIEW_CLEAN_SCORE              AS  cleanScore,
+            REVIEW_FACILITY_SCORE           AS  facilityScore,
+            REVIEW_LOCATION_SCORE           AS  locationScore,
+            REVIEW_SERVICE_SCORE            AS  serviceScore
+        FROM
+            MNJ_HOTEL_REVIEW
+        WHERE
+            REVIEW_HOTEL_REGISTER_NO = #{VALUE}
+
+    </select>
+
+
+
+
+</mapper>
