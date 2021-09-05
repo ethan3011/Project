@@ -21,9 +21,9 @@
     +  OS : Window10
     +  DBMS : Amazon Web Services RDS(Oracle DB 12)
     +  WAS : Apache Tomcat 9
-    +  Language : Java, Servlet/JSP, HTML5, CSS3, JavaScript,
+    +  Language : Java, Servlet/JSP, HTML5, CSS3, JavaScript
     +  Framework : Spring, MyBatis
-    +  Library : Ajax, Javax.mail, jQuery, JSTL, EL, Lombok, Gson, jackson, log4j, commons-codec,
+    +  Library : Ajax, Javax.mail, jQuery, JSTL, EL, Lombok, Gson, jackson, log4j, commons-codec
     +  형상관리 : Git
     +  API : 공공데이터포털(한국관광공사,한국공항공사), Kakao,Naver Developers
 +  개발툴
