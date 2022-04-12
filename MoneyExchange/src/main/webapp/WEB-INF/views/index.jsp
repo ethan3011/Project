@@ -53,7 +53,7 @@
                     <div class="row">
                         <div class="col-4"><span>송금액:</span></div>
                         <div class="col-6">
-                            <input type="text" id="amount" class="form-control" value="100" onKeyUp="removeChar(event);inputNumberFormat(this);checkSize();" onKeyDown="inputNumberFormat(this);"/>
+                            <input type="text" id="amount" class="form-control" value="100" onKeyUp="removeChar(event);inputNumberFormat(this);checkSize();" onKeyDown="inputNumberFormat(this)"/>
                         </div>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
         console.log(value);
         if(value > 10000 || value < 1) {
             alert('송금액이 바르지 않습니다');
-            $('#amount').val('1');
+            $('#amount').val('100');
             return;
         }
     }
@@ -166,7 +166,6 @@
                     var nowTotal= data.nowTotal;
                     var errorMessage = data.errorMessage;
 
-                    console.log(errorMessage);
                     if(errorMessage != undefined) {
                         alert(errorMessage);
                         return;
@@ -186,7 +185,7 @@
                     }
                 },
                 error: function() {
-                    alert('환율을 확인하는 도중 오류가 발생하였습니다. 잠시 후 다시 시도해주십시오.');
+                    alert('알수없는 에러가 발생하였습니다. 잠시 후 다시 시도해 주세요');
                     return;
                 }
             })
