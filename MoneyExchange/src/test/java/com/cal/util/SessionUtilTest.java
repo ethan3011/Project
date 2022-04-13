@@ -1,6 +1,5 @@
 package com.cal.util;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -16,7 +15,7 @@ public class SessionUtilTest {
 
     // 세션 상태 확인 테스트를 위한 기본 조건
     @Before
-    public void Before() throws Exception {
+    public void Before() {
         // 세션에 담을 객체
         String ThisIsTest = "ThisIsTest";
 

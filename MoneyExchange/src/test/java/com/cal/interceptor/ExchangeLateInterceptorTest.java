@@ -23,7 +23,7 @@ public class ExchangeLateInterceptorTest {
 
     // 세션 상태 확인 테스트를 위한 기본 조건
     @Before
-    public void Before() throws Exception {
+    public void Before(){
         // 세션에 담을 객체
         String ThisIsTest = "ThisIsTest";
 
@@ -49,7 +49,7 @@ public class ExchangeLateInterceptorTest {
 
         try{
             // 테스트 주소
-            String sb = "http://apilayer.net/api/live?access_key=74ef438846e952a456b7a41df222b3b2&currencies=KRW,JPY,PHP&source=USD";
+            String sb = "http://apilayer.net/api/live?access_key=14967058464064fbf87be50198c364ce&currencies=KRW,JPY,PHP&source=USD";
 
             // 연결 테스트
             String result = exchangeUtil.connectAPI(new URL(sb));
@@ -85,40 +85,38 @@ public class ExchangeLateInterceptorTest {
                 for(String str : strs) {
 
                     // str에 널값이 없음을 테스트
-                    assertTrue(str != null);
+                    assertNotNull(str);
 
-                    if(str != null) {
-                        // USDKRW 글자로 잘린 문장이 있으면
-                        if(str.contains("USDKRW")) {
+                    // USDKRW 글자로 잘린 문장이 있으면
+                    if(str.contains("USDKRW")) {
 
-                            // 정규식으로 숫자, . 을 제외한 나머지를 삭제
-                            String USDKRW = str.replaceAll("[^0-9//.]", "");
+                        // 정규식으로 숫자, . 을 제외한 나머지를 삭제
+                        String USDKRW = str.replaceAll("[^0-9//.]", "");
 
-                            // 정말 숫자와 .만 들어있는지 테스트
-                            assertTrue(USDKRW.matches("[0-9//.]*$"));
+                        // 정말 숫자와 .만 들어있는지 테스트
+                        assertTrue(USDKRW.matches("[0-9//.]*$"));
 
-                            // 비어있지 않으면 값 넣기
-                            if(!"".equals(USDKRW)) {
-                                map.put("USDKRW", new BigDecimal(USDKRW));
-                            }
+                        // 비어있지 않으면 값 넣기
+                        if(!"".equals(USDKRW)) {
+                            map.put("USDKRW", new BigDecimal(USDKRW));
                         }
+                    }
 
-                        // 위와 같음
-                        if(str.contains("USDJPY")) {
-                            String USDJPY = str.replaceAll("[^0-9//.]", "");
-                            assertTrue(USDJPY.matches("[0-9//.]*$"));
-                            if(!"".equals(USDJPY)){
-                                map.put("USDJPY", new BigDecimal(USDJPY));
-                            }
+                    // 위와 같은 방식으로 진행
+                    if(str.contains("USDJPY")) {
+                        String USDJPY = str.replaceAll("[^0-9//.]", "");
+                        assertTrue(USDJPY.matches("[0-9//.]*$"));
+                        if(!"".equals(USDJPY)){
+                            map.put("USDJPY", new BigDecimal(USDJPY));
                         }
+                    }
 
-                        // 위와 같음
-                        if(str.contains("USDPHP")) {
-                            String USDPHP = str.replaceAll("[^0-9//.]", "");
-                            assertTrue(USDPHP.matches("[0-9//.]*$"));
-                            if(!"".equals(USDPHP)) {
-                                map.put("USDPHP", new BigDecimal(USDPHP));
-                            }
+                    // 위와 같은 방식으로 진행
+                    if(str.contains("USDPHP")) {
+                        String USDPHP = str.replaceAll("[^0-9//.]", "");
+                        assertTrue(USDPHP.matches("[0-9//.]*$"));
+                        if(!"".equals(USDPHP)) {
+                            map.put("USDPHP", new BigDecimal(USDPHP));
                         }
                     }
                 }

@@ -16,13 +16,24 @@ public class ExchangeUtil {
 
     private static final Logger logger = LoggerFactory.getLogger(ExchangeUtil.class);
 
+    /**
+     * API 연결 시도 메소드
+     * @param connectUrl URL 타입의 URL 주소
+     * @return 연결이후 출력 메세지, 성공(200)시 데이터가, 실패 시 에러 코드에 대한 메세지가 담긴다.
+     */
     public String connectAPI(URL connectUrl) {
 
+        // 출력 데이터 저장을 위한 변수
         StringBuilder sb = new StringBuilder();
+
+        // 응답 코드 초기화
         int responseCode = 0;
+
+        // 커넥션 초기화
         HttpURLConnection conn = null;
 
         try {
+            // 연결 및 데이터 타입 & 시간 설정
             conn = (HttpURLConnection) connectUrl.openConnection();
             conn.setDoOutput(true);
             conn.setRequestMethod("GET");
@@ -31,30 +42,44 @@ public class ExchangeUtil {
             conn.setConnectTimeout(10000);
             conn.setReadTimeout(10000);
 
+            // 한번에 데이터를 담아 사용하기 위한 Buffer 생성
             BufferedReader br;
+            // 커넥션 연결
             responseCode = conn.getResponseCode();
 
+            // 성공 시
             if (responseCode == 200) {
+                // 커넥션에 있는 데이터를 읽어
                 br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
                 String line;
+                // 데이터가 비어있을 때 까지 반복하여 데이터 저장
                 while ((line = br.readLine()) != null) {
                     sb.append(line);
                 }
             }else {
+                // 200 아닐 경우 log와 StringBuilder에 에러 메세지 저장
                 addErrorMsg(sb,responseCode);
             }
+            // 오류 발생시 에러 log와 기본 commonErrorMsg 저장
         } catch (Exception e) {
             logger.info(responseCode + " 번의 에러가 발생하였습니다.", e.getMessage());
             sb.append(commonErrorMsg);
         } finally {
+            // 연결이 아직 되어있다면 종료
             if(conn != null) {
                 conn.disconnect();
             }
         }
+        // 저장된 값 봔환
         return sb.toString();
     }
 
-
+    /**
+     * 에러 메세지를 저장할 때 사용 되는 메소드, 사용자에게 보여지는 안되는 에러 메세지는 commonErrorMsg 를 사용한다.
+     * @param sb 에러 메세지를 저장할 변수
+     * @param responseCode 응답 코드
+     * @reference https://currencylayer.com/documentation
+     */
     public void addErrorMsg(StringBuilder sb, int responseCode) {
         if (responseCode == 101) {
             logger.info("FAIL : 존재하지 않거나 잘못된 엑세스 키가 입력되었습니다.");
